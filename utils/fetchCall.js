@@ -1,4 +1,4 @@
-const fetchCall = async (endpoint) => {
+const fetchCall = async (endpoint, page) => {
 	const data = await fetch(
 		`https://vast-shore-74260.herokuapp.com/banks?city=${endpoint}`,
 		{
@@ -7,11 +7,7 @@ const fetchCall = async (endpoint) => {
 				Accept: "application/json",
 			},
 		}
-	)
-		.then((response) => response.json())
-		.then((res) => {
-			return res.splice(0, 10)
-		})
+	).then((response) => response.json())
 
 	return data
 }

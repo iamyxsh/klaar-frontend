@@ -1,24 +1,43 @@
 import { useEffect, useState } from "react"
-import fetchCall from "../utils/fetchCall"
+
 import SearchBar from "../components/HomePage/SearchBar"
-import banksConst from "../constants/banks"
+
 import DisplayTable from "../components/HomePage/Table"
+import Loader from "../components/Loader/Loader"
+import cachedCall from "../utils/useFetch"
 
 export default function Home() {
 	const [term, setTerm] = useState("")
 	const [city, setCity] = useState(0)
+	const [page, setPage] = useState(10)
+	const [load, setLoad] = useState(false)
 	const [banks, setBanks] = useState([])
 	const [filBanks, setFilBanks] = useState([])
+	const [likes, setLikes] = useState([])
+
+	useEffect(() => {
+		setLikes(
+			JSON.parse(localStorage.getItem("likes")) &&
+				JSON.parse(localStorage.getItem("likes")).length > 0
+				? JSON.parse(localStorage.getItem("likes"))
+				: []
+		)
+	}, [])
+
+	useEffect(() => {
+		localStorage.setItem("likes", JSON.stringify(likes))
+	}, [likes])
 
 	useEffect(() => {
 		const getBanks = async () => {
-			const data = await fetchCall(banksConst[city])
+			const data = await cachedCall(city, page, setLoading)
+
 			setBanks(data)
-			setFilBanks(data)
+			setFilBanks(data.splice(0, page))
 		}
 
 		getBanks()
-	}, [city])
+	}, [city, page])
 
 	useEffect(() => {
 		let banksWithTerm = []
@@ -41,8 +60,16 @@ export default function Home() {
 				}
 			})
 		}
-		setFilBanks(banksWithTerm)
-	}, [term])
+		setFilBanks(banksWithTerm.splice(0, page))
+	}, [term, page])
+
+	const setLoading = (val) => {
+		setLoad(val)
+	}
+
+	if (load) {
+		return <Loader />
+	}
 
 	return (
 		<>
@@ -51,8 +78,16 @@ export default function Home() {
 				setCity={(val) => setCity(val)}
 				term={term}
 				setTerm={(val) => setTerm(val)}
+				page={page}
+				setPage={(val) => setPage(val)}
 			/>
-			<DisplayTable banks={filBanks} />
+			<DisplayTable
+				banks={filBanks}
+				likes={likes}
+				setLikes={(val) => {
+					setLikes(val)
+				}}
+			/>
 		</>
 	)
 }

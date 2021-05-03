@@ -6,8 +6,18 @@ import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
+import StarIcon from "@material-ui/icons/Star"
+import StarBorderIcon from "@material-ui/icons/StarBorder"
 
-export default function DisplayTable({ banks }) {
+export default function DisplayTable({ banks, likes, setLikes }) {
+	const handleLike = (ifsc) => {
+		if (likes.includes(ifsc)) {
+			setLikes(likes.filter((i) => i != ifsc))
+		} else {
+			setLikes([...likes, ifsc])
+		}
+	}
+
 	return (
 		<TableContainer component={Paper}>
 			<Table aria-label="simple table">
@@ -37,6 +47,17 @@ export default function DisplayTable({ banks }) {
 								<TableCell align="center">{row.city}</TableCell>
 								<TableCell align="center">{row.district}</TableCell>
 								<TableCell align="center">{row.state}</TableCell>
+								<TableCell
+									align="center"
+									onClick={() => handleLike(row.ifsc)}
+									style={{ cursor: "pointer" }}
+								>
+									{likes.includes(row.ifsc) ? (
+										<StarIcon style={{ fill: "#219EBC" }} />
+									) : (
+										<StarBorderIcon />
+									)}
+								</TableCell>
 							</TableRow>
 						))
 					) : (

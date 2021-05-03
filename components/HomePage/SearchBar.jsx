@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }))
 
-const SearchBar = ({ setTerm, term, setCity, city }) => {
+const SearchBar = ({ setTerm, term, setCity, city, page, setPage }) => {
 	const classes = useStyles()
 
 	const handleChange = (event) => {
@@ -28,8 +28,13 @@ const SearchBar = ({ setTerm, term, setCity, city }) => {
 
 	return (
 		<Container maxWidth="md">
-			<Grid container style={{ padding: "2rem 0.5rem" }} alignItems="flex-end">
-				<Grid item xs={6}>
+			<Grid
+				container
+				style={{ padding: "2rem 0.5rem" }}
+				alignItems="flex-end"
+				spacing={2}
+			>
+				<Grid item xs={4}>
 					<FormControl className={classes.formControl}>
 						<InputLabel id="demo-simple-select-label">Age</InputLabel>
 						<Select
@@ -46,10 +51,25 @@ const SearchBar = ({ setTerm, term, setCity, city }) => {
 						</Select>
 					</FormControl>
 				</Grid>
-				<Grid item xs={6}>
+				<Grid item xs={4}>
+					<TextField
+						value={page}
+						type="number"
+						onChange={(e) => {
+							console.log(parseInt(e.target.value))
+							setPage(parseInt(e.target.value))
+						}}
+						id="standard-basic"
+						label="Result Count"
+					/>
+				</Grid>
+				<Grid item xs={4}>
 					<TextField
 						value={term}
-						onChange={(e) => setTerm(e.target.value)}
+						onChange={(e) => {
+							localStorage.setItem("city", e.target.value)
+							setTerm(e.target.value)
+						}}
 						id="standard-basic"
 						label="Search Term"
 						fullWidth
