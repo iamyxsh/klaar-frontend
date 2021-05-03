@@ -8,6 +8,7 @@ import TableRow from "@material-ui/core/TableRow"
 import Paper from "@material-ui/core/Paper"
 import StarIcon from "@material-ui/icons/Star"
 import StarBorderIcon from "@material-ui/icons/StarBorder"
+import Link from "next/link"
 
 export default function DisplayTable({ banks, likes, setLikes }) {
 	const handleLike = (ifsc) => {
@@ -42,7 +43,14 @@ export default function DisplayTable({ banks, likes, setLikes }) {
 								</TableCell>
 								<TableCell align="center">{row.bank_id}</TableCell>
 								<TableCell align="center">{row.address}</TableCell>
-								<TableCell align="center">{row.bank_name}</TableCell>
+								<TableCell
+									component={Link}
+									href={`/${row.ifsc}?city=${row.city}`}
+									align="center"
+									className="showbank"
+								>
+									<a>{row.bank_name}</a>
+								</TableCell>
 								<TableCell align="center">{row.branch}</TableCell>
 								<TableCell align="center">{row.city}</TableCell>
 								<TableCell align="center">{row.district}</TableCell>
